@@ -1,6 +1,22 @@
 from Point import *
 
 
+# Extended algorythm of Euclid
+def ext_euclid(a: int, b: int) -> tuple:
+    x2, x1, y2, y1 = 1, 0, 0, 1
+    while b > 0:
+        q, r = a // b, a % b
+        x, y = x2 - q * x1, y2 - q * y1
+
+        a = b
+        b = r
+        x2 = x1
+        x1 = x
+        y2 = y1
+        y1 = y
+    return a, x2, y2
+
+
 class IntM:
     def __init__(self, v: int, m: int):
         self.modulus = m
@@ -43,15 +59,9 @@ class IntM:
         if isinstance(other, IntM):
             if self.modulus != other.modulus:
                 raise ValueError
-            v = self.value
-            while v % other.value != 0:
-                v += self.modulus
-            return IntM(v // other.value, self.modulus)
+            return self.inv().__mul__(other)
         elif isinstance(other, int):
-            v = self.value
-            while v % other != 0:
-                v += self.modulus
-            return IntM(v // other, self.modulus)
+            return self.inv().__mul__(other)
         else:
             raise ValueError
 
@@ -61,6 +71,12 @@ class IntM:
             v *= self.value
             v %= self.modulus
         return IntM(v, self.modulus)
+
+    def inv(self):
+        d, x, y = ext_euclid(self.modulus, self.value)
+        if d == 1:
+            return IntM(y, self.modulus)
+        raise ValueError("При вычислении inv получился НОД != 1")
 
     def __gt__(self, other):
         if isinstance(other, IntM):
