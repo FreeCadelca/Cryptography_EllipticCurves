@@ -55,6 +55,13 @@ class IntM:
         else:
             raise ValueError
 
+    def __pow__(self, power: int, modulo=None):
+        v = 1
+        for i in range(power):
+            v *= self.value
+            v %= self.modulus
+        return IntM(v, self.modulus)
+
     def __gt__(self, other):
         if isinstance(other, IntM):
             if self.modulus != other.modulus:
