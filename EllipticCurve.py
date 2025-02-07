@@ -1,7 +1,6 @@
 from IntM import *
 import math
 
-
 isDebug = 0
 
 
@@ -49,9 +48,6 @@ class EllipticCurve:
                 return None
         except ValueError:
             return None
-
-    def inv_point(self, p: Point):
-        return Point(p.x, p.y * (-1))
 
     def find_points(self):
         print(f'<Finding orders func>') if isDebug else ''
@@ -132,12 +128,37 @@ class EllipticCurve:
         print(f'<find_prime_subgroups func end>') if isDebug else ''
 
 
-curve = EllipticCurve(3, -4, 13)
-print("Number of points: ", len(curve.find_points()))
-print(*curve.find_points())
-orders = curve.find_orders()
-for i in orders.keys():
-    print(f'Order({i}) = {orders[i]}')
-curve.find_prime_subgroups()
+# curve = EllipticCurve(3, -4, 13)
+# print("Number of points: ", len(curve.find_points()))
+# print(*curve.find_points())
+# orders = curve.find_orders()
+# for i in orders.keys():
+#     print(f'Order({i}) = {orders[i]}')
+# curve.find_prime_subgroups()
+#
+# print(f'3P(7; 3) = {curve.calculate_multiplicity(Point(IntM(7, 13), IntM(3, 13)), 3)}')
 
-print(f'3P(12; 3) = {curve.calculate_multiplicity(Point(IntM(7, 13), IntM(3, 13)), 3)}')
+a = int(input("Введите параметр a для кривой: "))
+b = int(input("Введите параметр b для кривой: "))
+p = int(input("Введите параметр p для кривой: "))
+curve = EllipticCurve(a, b, p)
+while True:
+    mode = int(input("Введите опцию exit/build curve/calculate a multiple point/subgroups of prime order "
+                     "[0/1/2/3]: "))
+    match mode:
+        case 1:
+            print("Количество точек: ", len(curve.find_points()))
+            print("Точки:")
+            print(*curve.find_points())
+            orders = curve.find_orders()
+            for i in orders.keys():
+                print(f'Order({i}) = {orders[i]}')
+        case 2:
+            x = int(input("Введите координату x точки: "))
+            y = int(input("Введите координату y точки: "))
+            k = int(input("Введите кратность точки: "))
+            print(f'{k}P({x}; {y}) = {curve.calculate_multiplicity(Point(IntM(x, curve.p), IntM(y, curve.p)), k)}')
+        case 3:
+            curve.find_prime_subgroups()
+        case _:
+            exit()
