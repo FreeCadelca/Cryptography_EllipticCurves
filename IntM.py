@@ -16,11 +16,10 @@ def ext_euclid(a: int, b: int) -> tuple:
         y1 = y
     return a, x2, y2
 
-
 class IntM:
     def __init__(self, v: int, m: int):
         self.modulus = m
-        self.value = v
+        self.value = v % m
 
     def __int__(self):
         return self.value
@@ -59,9 +58,9 @@ class IntM:
         if isinstance(other, IntM):
             if self.modulus != other.modulus:
                 raise ValueError
-            return self.inv().__mul__(other)
+            return self.__mul__(other.inv())
         elif isinstance(other, int):
-            return self.inv().__mul__(other)
+            return self.__mul__(IntM(other, self.modulus).inv())
         else:
             raise ValueError
 
@@ -131,7 +130,3 @@ class IntM:
 
     def __str__(self):
         return f'{self.value}m{self.modulus}'
-
-
-def make_intm_point(x: int, y: int, p: int):
-    return Point(IntM(x, p), IntM(y, p))

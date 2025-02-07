@@ -11,3 +11,9 @@ class Point:
 
     def __str__(self):
         return f'({str(self.x)}, {str(self.y)})'
+
+    def copy(self):
+        return Point(self.x, self.y)
+
+    def __hash__(self):
+        return hash(f'{self.x}{self.y}')
